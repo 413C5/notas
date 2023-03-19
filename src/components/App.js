@@ -24,7 +24,7 @@ const App = () => {
     //console.log('button Clicked',event.target)
     const noteObject = {
       content: newNote,
-      date: new Date().toISOString(),
+      date: new Date(),
       important: Math.random() < 0.5,
       id: notes.length + 1
     }
@@ -67,6 +67,26 @@ const App = () => {
       return 'all'
   }
 
+
+  const updateImportance=(id)=>{
+    const url=(`http://localhost:3001/notes/${id}`)
+    const note=notes.find(x=>x.id===id)
+    const note2={ ...note, important: !note.important }
+
+    axios
+    .put(url,note2)
+    .then(response=>{
+      setNotes(notes.map((note)=>{
+        if(note.id!=id)
+          return note
+        else
+          return response.data
+      }))
+    })
+    console.log('actualizar importancia de ',id)
+
+  }
+
   return (
     <div>
       <h1>Notes</h1>
@@ -77,7 +97,12 @@ const App = () => {
         {notesToShow.map(x => {
           console.log(x.id, x.content);
           return (
-            <Note key={x.id} note={x} />
+            <Note 
+              key={x.id} 
+              note={x}
+              /* Pasa directamente el evento */
+              updateImportance={()=>updateImportance(x.id)} 
+            />
           )
         })}
       </ul>
