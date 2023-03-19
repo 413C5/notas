@@ -28,16 +28,27 @@ const App = () => {
       important: Math.random() < 0.5,
       id: notes.length + 1
     }
-    setNotes(notes.concat(noteObject));
-    setNewNote('')
+
+    //Agregar una nueva nota, enviandola al servidor
+    axios
+    .post('http://localhost:3001/notes',noteObject)
+    .then(response=>{
+      console.log(response.data)
+      setNotes(notes.concat(response.data))
+      setNewNote('')
+    })
   }
+
+  //Agregar una nueva nota
+
+
   const handleNoteChanged = (event) => {
     //console.log(event.target.value)
     setNewNote(event.target.value)
   }
 
   const notesToShow = (() => {
-    if (showAll==true) {
+    if (showAll===true) {
       return notes
     } 
     else{
@@ -50,9 +61,9 @@ const App = () => {
   }
 
   const TextButton=({showAll})=>{
-    if(showAll==true)
+    if(showAll===true)
       return 'important'
-    else if(showAll==false)
+    else if(showAll===false)
       return 'all'
   }
 
