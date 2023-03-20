@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Note from "./Note";
 import axios from "axios";
+import noteService from "../Services/notes"
 
 
 const App = () => {
@@ -9,14 +10,13 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
 
   useEffect(() => {
-    console.log('Entro al Effect');
-    axios
-      .get('http://localhost:3001/notes')
+    noteService //equivalente de axios
+      .getAll() //equivalente de .get de la dirección
       .then(response => {
-        console.log('Entro al then');
-        setNotes(response.data)
+        setNotes(response)
       })
   }, [])
+  
   console.log('render', notes.length, 'notes');
 
   const addNote = (event) => {
@@ -30,16 +30,14 @@ const App = () => {
     }
 
     //Agregar una nueva nota, enviandola al servidor
-    axios
-    .post('http://localhost:3001/notes',noteObject)
-    .then(response=>{
-      console.log(response.data)
-      setNotes(notes.concat(response.data))
-      setNewNote('')
-    })
+    noteService
+      .create(noteObject)
+      .then(response => {
+        setNotes(notes.concat(response))
+        setNewNote('')
+      })
   }
 
-  //Agregar una nueva nota
 
 
   const handleNoteChanged = (event) => {
@@ -48,42 +46,41 @@ const App = () => {
   }
 
   const notesToShow = (() => {
-    if (showAll===true) {
+    if (showAll === true) {
       return notes
-    } 
-    else{
+    }
+    else {
       return notes.filter(x => x.important)
     }
   })()
 
-  const handleShowAll=()=>{
+  const handleShowAll = () => {
     setShowAll(!showAll)
   }
 
-  const TextButton=({showAll})=>{
-    if(showAll===true)
+  const TextButton = ({ showAll }) => {
+    if (showAll === true)
       return 'important'
-    else if(showAll===false)
+    else if (showAll === false)
       return 'all'
   }
 
 
-  const updateImportance=(id)=>{
-    const url=(`http://localhost:3001/notes/${id}`)
-    const note=notes.find(x=>x.id===id)
-    const note2={ ...note, important: !note.important }
+  const updateImportance = (id) => {
+    const note = notes.find(x => x.id === id)
+    const note2 = { ...note, important: !note.important }
 
-    axios
-    .put(url,note2)
-    .then(response=>{
-      setNotes(notes.map((note)=>{
-        if(note.id!=id)
-          return note
-        else
-          return response.data
-      }))
-    })
-    console.log('actualizar importancia de ',id)
+    noteService
+      .update(id, note2)
+      .then(response => {
+        setNotes(notes.map((note) => {
+          if (note.id !== id)
+            return note
+          else
+            return response
+        }))
+      })
+    console.log('actualizar importancia de ', id)
 
   }
 
@@ -91,17 +88,17 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <button onClick={handleShowAll}>
-        <TextButton showAll={showAll}/>
+        <TextButton showAll={showAll} />
       </button>
       <ul>
         {notesToShow.map(x => {
           console.log(x.id, x.content);
           return (
-            <Note 
-              key={x.id} 
+            <Note
+              key={x.id}
               note={x}
               /* Pasa directamente el evento */
-              updateImportance={()=>updateImportance(x.id)} 
+              updateImportance={() => updateImportance(x.id)}
             />
           )
         })}
