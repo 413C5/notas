@@ -2,7 +2,6 @@ import React from "react";
 
 const Note=({note,updateImportance})=>{
 
-    //
     const label=(()=>{
         if(note.important===true)
             return 'make not important'
@@ -11,7 +10,7 @@ const Note=({note,updateImportance})=>{
     })()
 
     return(
-        <li>
+        <li className="note">
             {note.content} <button onClick={updateImportance}>{label}</button>
         </li>
     )

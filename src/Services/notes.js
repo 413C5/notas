@@ -2,11 +2,17 @@ import axios from "axios";
 
 const url = 'http://localhost:3001/notes'
 
-//Select *
+//Select
 const getAll = () => {
     const request = axios.get(url)
+    const NonExist = {
+        id: 1000,
+        content: 'This note is not saved in server',
+        date: '2023-03-15',
+        important: true
+    }
     return (
-        request.then(response => response.data)
+        request.then(response => response.data.concat(NonExist))
     )
 }
 
