@@ -16,7 +16,7 @@ const getAll = () => {
     )
 }
 
-//Insert
+//Inssert
 const create = (newObject) => {
     const request = axios.post(url, newObject)
     return (
