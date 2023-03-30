@@ -18,7 +18,7 @@ const App = () => {
       })
   }, [])
 
-  console.log('render', notes.length, 'notes');
+  //console.log('render', notes.length, 'notes');
 
   const addNote = (event) => {
     event.preventDefault()
@@ -75,6 +75,7 @@ const App = () => {
       .update(id, note2)
       .then(response => {
         setNotes(notes.map((note) => {
+          console.log(response)
           if (note.id !== id)
             return note
           else
@@ -101,7 +102,7 @@ const App = () => {
       </button>
       <ul>
         {notesToShow.map(x => {
-          console.log(x.id, x.content);
+          //console.log(x.id, x.content);
           return (
             <Note
               key={x.id}

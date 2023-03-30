@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = 'http://localhost:3001/notes'
+const url = 'https://notes-server-tmma.onrender.com'
 
 //Select
 const getAll = () => {
